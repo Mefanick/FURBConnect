@@ -1,7 +1,10 @@
 /* Página de post — estrutura inspirada no Reddit, cores e tokens do tema FURB */
 
 .post-page {
-  gap: 1rem;
+  gap: 0.65rem;
+  /* Alinhar breadcrumb à mesma coluna que o painel + comentários */
+  --post-readable-max: 50rem;
+  --post-wrap-pad-x: 1.15rem;
 }
 
 .post-page__crumb {
@@ -11,6 +14,9 @@
   gap: 0.35rem 0.6rem;
   font-size: 0.8125rem;
   color: var(--color-on-surface-variant);
+  width: min(var(--post-readable-max), max(0px, calc(100% - 2 * var(--post-wrap-pad-x))));
+  margin-inline: auto;
+  box-sizing: border-box;
 }
 
 .post-page__crumb a {
@@ -56,16 +62,29 @@
 .post-thread__body-wrap {
   flex: 1;
   min-width: 0;
-  padding: 1rem 1.15rem 1.25rem;
+  padding: 1rem var(--post-wrap-pad-x) 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 1.15rem;
 }
 
+/* Página /post: sem moldura no card externo; só traço vertical à direita do bloco principal + comentários */
+.post-page .post-thread {
+  border: none;
+  box-shadow: none;
+}
+
+.post-page .post-thread__body-wrap {
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+  border-right: 1px solid color-mix(in srgb, var(--color-outline-variant) 80%, transparent);
+}
+
 .post-thread__body-wrap > * {
   width: 100%;
-  max-width: min(50rem, 100%);
+  max-width: min(var(--post-readable-max), 100%);
   margin-inline: auto;
 }
 
@@ -868,7 +887,11 @@
 }
 
 @media (max-width: 540px) {
+  .post-page {
+    --post-wrap-pad-x: 0.85rem;
+  }
+
   .post-thread__body-wrap {
-    padding: 0.75rem 0.85rem 1rem;
+    padding: 0.75rem var(--post-wrap-pad-x) 1rem;
   }
 }

@@ -1176,6 +1176,12 @@ button.home-account-menu__btn:not(:disabled):hover {
   min-width: 0;
 }
 
+@media (min-width: 769px) {
+  .home-feed {
+    margin-left: 10px;
+  }
+}
+
 .home-hero {
   position: relative;
   padding: 1.75rem 1.5rem;
@@ -1882,4 +1888,37 @@ a.home-card__body--link:hover .home-card__title {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+/* Mobile: .home-sidebar base (sticky) está declarado abaixo no arquivo e sobrescrevia o drawer
+   (fixed), recolocando a sidebar no fluxo e gerando faixa em branco acima do feed. */
+@media (max-width: 768px) {
+  .home .home-body > .home-sidebar {
+    grid-area: unset;
+    position: fixed;
+    top: var(--home-topbar-h);
+    left: 0;
+    bottom: calc(var(--home-mobile-footer-h) + env(safe-area-inset-bottom, 0px));
+    width: min(19.5rem, 90vw);
+    max-height: none;
+    margin: 0;
+    z-index: 56;
+    transform: translate3d(-108%, 0, 0);
+    transition: transform 0.22s ease;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    box-shadow: 8px 0 28px color-mix(in srgb, var(--color-on-surface) 14%, transparent);
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .home--nav-open .home .home-body > .home-sidebar {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .home .home-body > .home-sidebar.home-sidebar--reddit:not(.home-sidebar--collapsed) {
+    overflow: hidden;
+    max-height: none;
+  }
 }
