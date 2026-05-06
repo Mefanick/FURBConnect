@@ -533,28 +533,36 @@ button.home-account-menu__btn:not(:disabled):hover {
     display: none !important;
   }
 
-  /* Drawer lateral = mesmo conteúdo da sidebar desktop */
+  /* Drawer: entra da esquerda, cobre a tela (estilo app); mesmo painel visual da sidebar desktop */
   .home-sidebar {
     grid-area: unset;
     position: fixed;
-    top: var(--home-topbar-h);
+    top: 0;
     left: 0;
-    bottom: calc(var(--home-mobile-footer-h) + env(safe-area-inset-bottom, 0px));
-    width: min(19.5rem, 90vw);
+    bottom: 0;
+    width: min(85vw, 21rem);
+    height: 100vh;
+    height: 100dvh;
     max-height: none;
     margin: 0;
-    z-index: 56;
-    transform: translate3d(-108%, 0, 0);
-    transition: transform 0.22s ease;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+    z-index: 110;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.24s cubic-bezier(0.32, 0.72, 0, 1);
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-    box-shadow: 8px 0 28px color-mix(in srgb, var(--color-on-surface) 14%, transparent);
+    box-shadow:
+      12px 0 40px color-mix(in srgb, var(--color-on-surface) 22%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-on-surface) 6%, transparent);
     align-self: stretch;
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  .home--nav-open .home-sidebar {
+  /* Mesmo elemento: usar .home.home--nav-open, não ".home--nav-open .home" (esse nunca casa) */
+  .home.home--nav-open .home-body > .home-sidebar {
     transform: translate3d(0, 0, 0);
   }
 
@@ -619,20 +627,18 @@ button.home-account-menu__btn:not(:disabled):hover {
   .home-mobile-backdrop {
     display: block;
     position: fixed;
-    top: var(--home-topbar-h);
-    left: 0;
-    right: 0;
-    bottom: calc(var(--home-mobile-footer-h) + env(safe-area-inset-bottom, 0px));
-    z-index: 54;
+    inset: 0;
+    z-index: 100;
     border: none;
     padding: 0;
     margin: 0;
     cursor: pointer;
-    background: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    background: color-mix(in srgb, var(--color-on-surface) 52%, transparent);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s;
+    transition: opacity 0.22s ease, visibility 0.22s;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .home--nav-open .home-mobile-backdrop {
@@ -717,10 +723,6 @@ button.home-account-menu__btn:not(:disabled):hover {
 @media (min-width: 769px) {
   .home-sidebar__mobile-head {
     display: none;
-  }
-
-  .home-sidebar--reddit:not(.home-sidebar--collapsed) .home-sidebar__scroll {
-    padding-top: 2.35rem;
   }
 }
 
@@ -1896,24 +1898,31 @@ a.home-card__body--link:hover .home-card__title {
   .home .home-body > .home-sidebar {
     grid-area: unset;
     position: fixed;
-    top: var(--home-topbar-h);
+    top: 0;
     left: 0;
-    bottom: calc(var(--home-mobile-footer-h) + env(safe-area-inset-bottom, 0px));
-    width: min(19.5rem, 90vw);
+    bottom: 0;
+    width: min(85vw, 21rem);
+    height: 100vh;
+    height: 100dvh;
     max-height: none;
     margin: 0;
-    z-index: 56;
-    transform: translate3d(-108%, 0, 0);
-    transition: transform 0.22s ease;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+    z-index: 110;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.24s cubic-bezier(0.32, 0.72, 0, 1);
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-    box-shadow: 8px 0 28px color-mix(in srgb, var(--color-on-surface) 14%, transparent);
+    box-shadow:
+      12px 0 40px color-mix(in srgb, var(--color-on-surface) 22%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-on-surface) 6%, transparent);
     align-self: stretch;
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  .home--nav-open .home .home-body > .home-sidebar {
+  .home.home--nav-open .home-body > .home-sidebar {
     transform: translate3d(0, 0, 0);
   }
 
