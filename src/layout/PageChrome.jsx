@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import logoFurbConnect from '../assets/Logo furbconnect.png'
 import {
@@ -84,6 +84,15 @@ function IconSidebarToggle({ pointLeft }) {
 }
 
 const SIDEBAR_COLLAPSED_KEY = 'furbconnect.sidebarCollapsed'
+const MOBILE_QUERY = '(max-width: 768px)'
+
+function IconMenu() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+}
 
 function IconSearch(props) {
   return (
@@ -319,6 +328,9 @@ export default function PageChrome({
     }
   })
 
+  const [isMobile, setIsMobile] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+
   useEffect(() => {
     try {
       window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? '1' : '0')
@@ -327,17 +339,54 @@ export default function PageChrome({
     }
   }, [sidebarCollapsed])
 
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY)
+    const apply = () => setIsMobile(mq.matches)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
+
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [location.pathname, location.search])
+
+  useEffect(() => {
+    if (!mobileNavOpen || !isMobile) return
+    function onKey(e) {
+      if (e.key === 'Escape') setMobileNavOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileNavOpen, isMobile])
+
   const bodyClass = [
     'home-body',
     !showLeftSidebar && 'home-body--no-left',
-    showLeftSidebar && sidebarCollapsed && 'home-body--sidebar-collapsed',
+    showLeftSidebar && sidebarCollapsed && !isMobile && 'home-body--sidebar-collapsed',
   ]
     .filter(Boolean)
     .join(' ')
 
+  const homeRootClass = ['home', isMobile && mobileNavOpen && 'home--nav-open'].filter(Boolean).join(' ')
+
+  const showSidebarNav = !sidebarCollapsed || isMobile
+
   return (
-    <div className="home">
+    <div className={homeRootClass}>
       <header className="home-topbar">
+        {showLeftSidebar && isMobile ? (
+          <button
+            type="button"
+            className="home-topbar__menu-btn"
+            aria-expanded={mobileNavOpen}
+            aria-controls="home-sidebar-nav"
+            onClick={() => setMobileNavOpen((o) => !o)}
+          >
+            <IconMenu />
+            <span className="sr-only">Abrir menu de navegação</span>
+          </button>
+        ) : null}
         <Link className="home-topbar__brand" to="/home">
           <img
             className="home-topbar__logo"
@@ -441,9 +490,25 @@ export default function PageChrome({
       <div className={bodyClass}>
         {showLeftSidebar ? (
           <aside
-            className={`home-sidebar home-sidebar--reddit ${sidebarCollapsed ? 'home-sidebar--collapsed' : ''}`}
-            aria-label={sidebarCollapsed ? 'Menu lateral recolhido' : 'Navegação e filtros'}
+            className={`home-sidebar home-sidebar--reddit ${sidebarCollapsed && !isMobile ? 'home-sidebar--collapsed' : ''}`}
+            aria-label={
+              isMobile ? 'Menu de navegação' : sidebarCollapsed ? 'Menu lateral recolhido' : 'Navegação e filtros'
+            }
+            aria-hidden={isMobile ? !mobileNavOpen : undefined}
           >
+            {isMobile ? (
+              <div className="home-sidebar__mobile-head">
+                <span className="home-sidebar__mobile-title">Menu</span>
+                <button
+                  type="button"
+                  className="home-sidebar__mobile-close"
+                  onClick={() => setMobileNavOpen(false)}
+                  aria-label="Fechar menu"
+                >
+                  ×
+                </button>
+              </div>
+            ) : null}
             <div className="home-sidebar__toolbar">
               <button
                 type="button"
@@ -460,8 +525,15 @@ export default function PageChrome({
               </button>
             </div>
 
-            {!sidebarCollapsed ? (
-            <div id="home-sidebar-nav">
+            {showSidebarNav ? (
+            <div
+              id="home-sidebar-nav"
+              className="home-sidebar__scroll"
+              onClick={(e) => {
+                if (!isMobile) return
+                if (e.target.closest('a[href], button.home-nav-item')) setMobileNavOpen(false)
+              }}
+            >
               <nav className="home-rnav" aria-label="Atalhos do feed">
                 <Link
                   className={`home-rnav__item ${feedSort === 'recent' ? 'home-rnav__item--active' : ''}`}
@@ -564,6 +636,16 @@ export default function PageChrome({
           </aside>
         ) : null}
 
+        {isMobile && showLeftSidebar ? (
+          <button
+            type="button"
+            className="home-mobile-backdrop"
+            aria-label="Fechar menu"
+            tabIndex={mobileNavOpen ? 0 : -1}
+            onClick={() => setMobileNavOpen(false)}
+          />
+        ) : null}
+
         {children}
 
         <aside className="home-aside">
@@ -661,6 +743,45 @@ export default function PageChrome({
           </section>
         </aside>
       </div>
+
+      {isMobile ? (
+        <nav className="home-mobile-footer" aria-label="Navegação inferior">
+          <NavLink
+            to="/home"
+            end
+            className={({ isActive }) =>
+              `home-mobile-footer__link${isActive ? ' home-mobile-footer__link--active' : ''}`
+            }
+          >
+            <IconRNavHome />
+            <span>Início</span>
+          </NavLink>
+          <NavLink
+            to="/criar-post"
+            className={({ isActive }) =>
+              `home-mobile-footer__link${isActive ? ' home-mobile-footer__link--active' : ''}`
+            }
+          >
+            <IconRNavPlus />
+            <span>Criar</span>
+          </NavLink>
+          <NavLink
+            to={isAuthenticated ? '/perfil' : '/login'}
+            className={({ isActive }) =>
+              `home-mobile-footer__link${isActive ? ' home-mobile-footer__link--active' : ''}`
+            }
+          >
+            {isAuthenticated && user?.avatarUrl ? (
+              <img className="home-mobile-footer__avatar" src={user.avatarUrl} alt="" width={22} height={22} />
+            ) : (
+              <span className="home-mobile-footer__avatar-fallback" aria-hidden>
+                {isAuthenticated && user ? (user.avatarInitial ?? 'V') : '?'}
+              </span>
+            )}
+            <span>Você</span>
+          </NavLink>
+        </nav>
+      ) : null}
     </div>
   )
 }

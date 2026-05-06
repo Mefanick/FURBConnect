@@ -2,6 +2,8 @@
 
 .home {
   --home-sidebar-sticky-top: 4.75rem;
+  --home-topbar-h: 4.75rem;
+  --home-mobile-footer-h: 3.75rem;
 
   min-height: 100vh;
   display: flex;
@@ -71,6 +73,26 @@
 
 .home-topbar__login:hover {
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.home-topbar__menu-btn {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-on-surface) 5%, transparent);
+  color: var(--color-on-surface);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.home-topbar__menu-btn:hover {
+  background: var(--color-secondary);
 }
 
 .home-topbar__search-wrap {
@@ -382,6 +404,8 @@ button.home-account-menu__btn:not(:disabled):hover {
 
 .home-feed {
   grid-area: feed;
+  position: relative;
+  z-index: 0;
 }
 
 .home-aside {
@@ -436,44 +460,267 @@ button.home-account-menu__btn:not(:disabled):hover {
   }
 }
 
-@media (max-width: 720px) {
+/* ——— Mobile shell: header (menu + busca), só feed, drawer = sidebar, footer fixo ——— */
+@media (max-width: 768px) {
+  .home {
+    --home-sidebar-sticky-top: var(--home-topbar-h);
+    --home-topbar-h: calc(3.25rem + env(safe-area-inset-top, 0px));
+  }
+
+  .home-topbar {
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    padding-left: max(0.65rem, env(safe-area-inset-left));
+    padding-right: max(0.65rem, env(safe-area-inset-right));
+    padding-top: calc(0.45rem + env(safe-area-inset-top, 0px));
+  }
+
+  .home-topbar__menu-btn {
+    display: inline-flex;
+  }
+
+  .home-topbar__brand-text {
+    display: none;
+  }
+
+  .home-topbar__logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .home-topbar__search-wrap {
+    display: flex !important;
+    flex: 1;
+    max-width: none;
+    margin: 0;
+    min-width: 0;
+  }
+
+  .home-topbar__search {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .home-topbar__actions {
+    display: none;
+  }
+
   .home-body {
+    display: block;
+    padding: 0.65rem max(0.65rem, env(safe-area-inset-left)) calc(var(--home-mobile-footer-h) + 0.85rem + env(safe-area-inset-bottom, 0px))
+      max(0.65rem, env(safe-area-inset-right));
+    max-width: 100%;
+  }
+
+  .home-body--no-left {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      'sidebar'
-      'feed'
-      'aside';
+    grid-template-areas: 'feed';
   }
 
   .home-body--sidebar-collapsed:not(.home-body--no-left) {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      'sidebar'
-      'feed'
-      'aside';
+    grid-template-areas: 'feed';
   }
 
-  .home-sidebar.home-sidebar--collapsed {
-    width: fit-content;
+  .home-feed,
+  .home-body > main {
+    grid-area: unset;
+    width: 100%;
     max-width: 100%;
-    margin-inline: auto;
   }
 
   .home-aside {
-    display: flex;
-    flex-direction: column;
+    display: none !important;
   }
 
-  .home-topbar__search-wrap {
+  /* Drawer lateral = mesmo conteúdo da sidebar desktop */
+  .home-sidebar {
+    grid-area: unset;
+    position: fixed;
+    top: var(--home-topbar-h);
+    left: 0;
+    bottom: calc(var(--home-mobile-footer-h) + env(safe-area-inset-bottom, 0px));
+    width: min(19.5rem, 90vw);
+    max-height: none;
+    margin: 0;
+    z-index: 56;
+    transform: translate3d(-108%, 0, 0);
+    transition: transform 0.22s ease;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    box-shadow: 8px 0 28px color-mix(in srgb, var(--color-on-surface) 14%, transparent);
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .home--nav-open .home-sidebar {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .home-sidebar__mobile-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    padding: 0.65rem 0.85rem 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-outline-variant) 75%, transparent);
+    background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface-container));
+  }
+
+  .home-sidebar__mobile-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-on-surface);
+  }
+
+  .home-sidebar__mobile-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-on-surface) 6%, transparent);
+    color: var(--color-on-surface);
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .home-sidebar__mobile-close:hover {
+    background: var(--color-secondary);
+  }
+
+  .home-sidebar__toolbar {
     display: none;
   }
 
-  .home-sidebar {
-    position: static;
-    top: auto;
+  .home-sidebar--reddit:not(.home-sidebar--collapsed),
+  .home-sidebar--reddit {
+    overflow: hidden;
     max-height: none;
-    overflow: visible;
-    z-index: auto;
+  }
+
+  .home-sidebar__scroll {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .home-sidebar.home-sidebar--collapsed::after {
+    display: none;
+  }
+
+  .home-mobile-backdrop {
+    display: block;
+    position: fixed;
+    top: var(--home-topbar-h);
+    left: 0;
+    right: 0;
+    bottom: calc(var(--home-mobile-footer-h) + env(safe-area-inset-bottom, 0px));
+    z-index: 54;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s;
+  }
+
+  .home--nav-open .home-mobile-backdrop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .home-mobile-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    gap: 0.25rem;
+    padding: 0.25rem 0.35rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+    padding-left: max(0.35rem, env(safe-area-inset-left));
+    padding-right: max(0.35rem, env(safe-area-inset-right));
+    background: var(--color-surface-container);
+    border-top: 1px solid var(--color-outline-variant);
+    box-shadow: 0 -4px 20px color-mix(in srgb, var(--color-on-surface) 8%, transparent);
+  }
+
+  .home-mobile-footer__link {
+    flex: 1;
+    max-width: 6.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    padding: 0.35rem 0.25rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-on-surface-variant);
+    transition:
+      background 0.12s ease,
+      color 0.12s ease;
+  }
+
+  .home-mobile-footer__link svg {
+    width: 22px;
+    height: 22px;
+    opacity: 0.85;
+  }
+
+  .home-mobile-footer__link--active {
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  }
+
+  .home-mobile-footer__link--active svg {
+    opacity: 1;
+  }
+
+  .home-mobile-footer__avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+
+  .home-mobile-footer__avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-primary) 18%, var(--color-surface));
+    color: var(--color-primary);
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+}
+
+@media (min-width: 769px) {
+  .home-sidebar__mobile-head {
+    display: none;
+  }
+
+  .home-sidebar--reddit:not(.home-sidebar--collapsed) .home-sidebar__scroll {
+    padding-top: 2.35rem;
   }
 }
 
@@ -518,6 +765,28 @@ button.home-account-menu__btn:not(:disabled):hover {
   padding: 0.65rem 0.5rem 0.85rem;
 }
 
+/* Scroll só na lista: permite o botão “flutuar” metade para fora (estilo Reddit) sem clip */
+.home-sidebar--reddit:not(.home-sidebar--collapsed) {
+  overflow: visible;
+  max-height: none;
+}
+
+.home-sidebar__scroll {
+  max-height: calc(
+    100vh - var(--home-sidebar-sticky-top) - 1.25rem - 0.65rem - 0.85rem
+  );
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.home-sidebar__scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .home-sidebar__toolbar {
   margin-bottom: 0.35rem;
   display: flex;
@@ -525,18 +794,21 @@ button.home-account-menu__btn:not(:disabled):hover {
   padding-left: 0.15rem;
 }
 
-/* Botão recolher/expandir à direita da coluna (borda próxima ao feed) */
+/* Toolbar: altura zero no fluxo — o botão é absolute e não deve deixar faixa vazia */
 .home-sidebar--reddit .home-sidebar__toolbar {
-  justify-content: flex-end;
-  padding-left: 0;
-  padding-right: 0;
+  position: relative;
+  min-height: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
 }
 
 .home-sidebar--collapsed .home-sidebar__toolbar {
   margin-bottom: 0;
 }
 
-/* Botão recolher: contorno primário FURB */
+/* Botão recolher: metade sobre o feed, centro na borda (referência Reddit) */
 .home-sidebar__collapse {
   display: inline-flex;
   align-items: center;
@@ -545,10 +817,12 @@ button.home-account-menu__btn:not(:disabled):hover {
   width: 2.125rem;
   height: 2.125rem;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-outline-variant));
+  border: 1px solid color-mix(in srgb, var(--color-on-surface) 22%, var(--color-outline-variant));
   border-radius: 50%;
-  background: var(--color-surface-container);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-primary) 10%, transparent);
+  background: var(--color-surface);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.08),
+    0 4px 12px color-mix(in srgb, var(--color-primary) 12%, transparent);
   color: var(--color-primary);
   cursor: pointer;
   font-family: inherit;
@@ -559,16 +833,37 @@ button.home-account-menu__btn:not(:disabled):hover {
     border-color 0.12s ease;
 }
 
+.home-sidebar--reddit:not(.home-sidebar--collapsed) .home-sidebar__collapse {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Metade no painel + metade no feed: centro na borda direita (padding 0.5rem) */
+  transform: translateX(calc(50% + 0.5rem));
+  z-index: 2;
+}
+
+.home-sidebar--reddit.home-sidebar--collapsed .home-sidebar__collapse {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateX(calc(50% + 0.1rem));
+  z-index: 2;
+}
+
 .home-sidebar__collapse:hover {
   background: var(--color-primary-container);
   color: var(--color-on-primary-container);
   border-color: color-mix(in srgb, var(--color-primary) 42%, transparent);
-  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-primary) 14%, transparent);
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.1),
+    0 6px 16px color-mix(in srgb, var(--color-primary) 16%, transparent);
 }
 
 .home-sidebar__collapse:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 28%, transparent),
+    0 2px 8px rgba(15, 23, 42, 0.12);
 }
 
 .home-sidebar__collapse svg {
@@ -578,7 +873,7 @@ button.home-account-menu__btn:not(:disabled):hover {
 
 /* Faixa recolhida: trilho 1px alinhado ao centro do botão (à direita); +24px abaixo do botão; termina a 50px do rodapé da viewport */
 .home-sidebar.home-sidebar--collapsed {
-  --home-sidebar-rail-top: calc(0.65rem + 2.125rem + 0.35rem + 24px);
+  --home-sidebar-rail-top: calc(0.65rem + 2.125rem + 24px);
 
   align-self: start;
   max-height: none;
@@ -595,8 +890,9 @@ button.home-account-menu__btn:not(:disabled):hover {
   position: absolute;
   top: var(--home-sidebar-rail-top);
   left: auto;
-  right: calc(0.1rem + 1.0625rem - 0.5px);
+  right: 0;
   width: 1px;
+  transform: translateX(50%);
   height: calc(100svh - var(--home-sidebar-sticky-top) - var(--home-sidebar-rail-top) - 50px);
   min-height: 120px;
   background: linear-gradient(
