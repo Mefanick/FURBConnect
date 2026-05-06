@@ -525,9 +525,14 @@ button.home-account-menu__btn:not(:disabled):hover {
   padding-left: 0.15rem;
 }
 
-.home-sidebar--collapsed .home-sidebar__toolbar {
-  justify-content: center;
+/* Botão recolher/expandir à direita da coluna (borda próxima ao feed) */
+.home-sidebar--reddit .home-sidebar__toolbar {
+  justify-content: flex-end;
   padding-left: 0;
+  padding-right: 0;
+}
+
+.home-sidebar--collapsed .home-sidebar__toolbar {
   margin-bottom: 0;
 }
 
@@ -566,9 +571,9 @@ button.home-account-menu__btn:not(:disabled):hover {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 
-/* Faixa recolhida: botão + trilho 1px (mesma espessura da borda da sidebar expandida), centrado no eixo do botão */
+/* Faixa recolhida: trilho 1px alinhado ao centro do botão (à direita); +24px abaixo do botão; termina a 50px do rodapé da viewport */
 .home-sidebar.home-sidebar--collapsed {
-  --home-sidebar-rail-top: calc(0.65rem + 2.5rem + 0.35rem);
+  --home-sidebar-rail-top: calc(0.65rem + 2.5rem + 0.35rem + 24px);
 
   align-self: start;
   max-height: none;
@@ -584,9 +589,10 @@ button.home-account-menu__btn:not(:disabled):hover {
   content: '';
   position: absolute;
   top: var(--home-sidebar-rail-top);
-  left: calc(50% - 0.5px);
+  left: auto;
+  right: calc(0.1rem + 1.25rem - 0.5px);
   width: 1px;
-  height: calc(100svh - var(--home-sidebar-sticky-top) - var(--home-sidebar-rail-top) - 100px);
+  height: calc(100svh - var(--home-sidebar-sticky-top) - var(--home-sidebar-rail-top) - 50px);
   min-height: 120px;
   background: linear-gradient(
     180deg,

@@ -453,34 +453,6 @@ export default function PostPage() {
         </nav>
 
         <article className="post-thread">
-          <aside className="post-thread__vote" aria-label="Votos">
-            <button
-              type="button"
-              className={
-                vote === 'up' ? 'post-vote__btn post-vote__btn--active-up' : 'post-vote__btn'
-              }
-              aria-pressed={vote === 'up'}
-              aria-label="Voto positivo"
-              onClick={() => toggleVote('up')}
-            >
-              <IconArrowUp />
-            </button>
-            <span className="post-vote__score" aria-live="polite">
-              {formatCount(scoreDisplay)}
-            </span>
-            <button
-              type="button"
-              className={
-                vote === 'down' ? 'post-vote__btn post-vote__btn--active-down' : 'post-vote__btn'
-              }
-              aria-pressed={vote === 'down'}
-              aria-label="Voto negativo"
-              onClick={() => toggleVote('down')}
-            >
-              <IconArrowDown />
-            </button>
-          </aside>
-
           <div className="post-thread__body-wrap">
             <div className="post-thread__content-panel">
               <header className="post-thread__header">
