@@ -1,0 +1,141 @@
+/**
+ * Material 3 — Color roles (FURB)
+ * Uso: var(--color-primary), var(--color-surface), etc.
+ * Tema segue prefers-color-scheme; override manual: .theme-light / .theme-dark no <html>.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Primária e texto sobre primária */
+  --color-primary: hsl(220, 70%, 45%);
+  --color-on-primary: hsl(0, 0%, 100%);
+
+  /* Superfícies */
+  --color-surface: hsl(210, 20%, 98%);
+  --color-surface-container: hsl(0, 0%, 100%);
+
+  /* Secundária, destaque e erro */
+  --color-secondary: hsl(210, 15%, 93%);
+  --color-accent: hsl(45, 95%, 55%);
+  --color-error: hsl(0, 62%, 50%);
+
+  /* Texto (light: contraste sobre surface; guia não fixa — complementar ao M3) */
+  --color-on-surface: hsl(220, 25%, 12%);
+  --color-on-surface-variant: hsl(220, 12%, 40%);
+
+  /* Texto sobre secundário (botões secundários) */
+  --color-on-secondary: hsl(220, 25%, 18%);
+
+  /* Aliases semânticos */
+  --color-background: var(--color-surface);
+
+  /* Material 3 — superfícies derivadas (chips, tonal buttons) */
+  --color-primary-container: color-mix(
+    in srgb,
+    var(--color-primary) 16%,
+    var(--color-surface-container)
+  );
+  --color-on-primary-container: hsl(220, 72%, 26%);
+  --color-outline-variant: hsl(220, 12%, 88%);
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --shadow-card:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    color-scheme: dark;
+
+    --color-primary: hsl(220, 80%, 70%);
+    --color-on-primary: hsl(216, 50%, 12%);
+
+    --color-surface: hsl(216, 50%, 8%);
+    --color-surface-container: hsl(216, 40%, 12%);
+
+    --color-secondary: hsl(216, 22%, 20%);
+    --color-accent: hsl(45, 90%, 58%);
+    --color-error: hsl(0, 65%, 62%);
+
+    --color-on-surface: hsl(210, 20%, 98%);
+    --color-on-surface-variant: hsl(210, 15%, 72%);
+
+    --color-on-secondary: hsl(210, 20%, 95%);
+
+    --color-background: var(--color-surface);
+
+    --color-primary-container: color-mix(
+      in srgb,
+      var(--color-primary) 22%,
+      var(--color-surface-container)
+    );
+    --color-on-primary-container: hsl(210, 90%, 88%);
+    --color-outline-variant: hsl(216, 18%, 28%);
+  }
+}
+
+/* Forçar tema claro */
+:root.theme-light {
+  color-scheme: light;
+
+  --color-primary: hsl(220, 70%, 45%);
+  --color-on-primary: hsl(0, 0%, 100%);
+
+  --color-surface: hsl(210, 20%, 98%);
+  --color-surface-container: hsl(0, 0%, 100%);
+
+  --color-secondary: hsl(210, 15%, 93%);
+  --color-accent: hsl(45, 95%, 55%);
+  --color-error: hsl(0, 62%, 50%);
+
+  --color-on-surface: hsl(220, 25%, 12%);
+  --color-on-surface-variant: hsl(220, 12%, 40%);
+
+  --color-on-secondary: hsl(220, 25%, 18%);
+
+  --color-background: var(--color-surface);
+
+  --color-primary-container: color-mix(
+    in srgb,
+    var(--color-primary) 16%,
+    var(--color-surface-container)
+  );
+  --color-on-primary-container: hsl(220, 72%, 26%);
+  --color-outline-variant: hsl(220, 12%, 88%);
+}
+
+/* Forçar tema escuro */
+:root.theme-dark {
+  color-scheme: dark;
+
+  --color-primary: hsl(220, 80%, 70%);
+  --color-on-primary: hsl(216, 50%, 12%);
+
+  --color-surface: hsl(216, 50%, 8%);
+  --color-surface-container: hsl(216, 40%, 12%);
+
+  --color-secondary: hsl(216, 22%, 20%);
+  --color-accent: hsl(45, 90%, 58%);
+  --color-error: hsl(0, 65%, 62%);
+
+  --color-on-surface: hsl(210, 20%, 98%);
+  --color-on-surface-variant: hsl(210, 15%, 72%);
+
+  --color-on-secondary: hsl(210, 20%, 95%);
+
+  --color-background: var(--color-surface);
+
+  --color-primary-container: color-mix(
+    in srgb,
+    var(--color-primary) 22%,
+    var(--color-surface-container)
+  );
+  --color-on-primary-container: hsl(210, 90%, 88%);
+  --color-outline-variant: hsl(216, 18%, 28%);
+}
